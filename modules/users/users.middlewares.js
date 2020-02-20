@@ -40,6 +40,7 @@ module.exports = {
         if(req.body.prenom) req.data.user.prenom = req.body.prenom;
         if(req.body.mdp) req.data.user.mdp = req.body.mdp;
         if(req.body.email) req.data.user.email = req.body.email;
+        if(req.body.image) req.data.user.image = req.body.image;
         req.data.user.save(function(err, userUpdated){
             if (err){
                 return next({

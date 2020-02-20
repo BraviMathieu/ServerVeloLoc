@@ -16,6 +16,7 @@ app.use(function(req, res, next){
 //bodyParser
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.json());
 
 //route et model
@@ -28,7 +29,7 @@ mongoose.connect('mongodb://localhost:27017/server-veloc', {
     useNewUrlParser: true,
     useUnifiedTopology:true
 });
-mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+mongoose.connection.on('error', console.error.bind(console, 'Erreur de connexion:'));
 mongoose.connection.once('open', function() {
 
     passport(app);
@@ -37,14 +38,14 @@ mongoose.connection.once('open', function() {
     app.use(function(req, res, next){
         next({
             status: 404,
-            message:"Error 404"
+            message:"Erreur 404"
         });
     });
 
     app.use(function(err, req, res) {
         res.status(err.status || 500);
 
-        let message = (err.message || "Error");
+        let message = (err.message || "Erreur");
 
         res.format({
             'text/plain': function () {

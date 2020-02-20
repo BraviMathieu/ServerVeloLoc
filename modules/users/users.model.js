@@ -22,6 +22,10 @@ var UserSchema = mongoose.Schema({
     dateInscription:{
         type: Date,
         required: true
+    },
+    image:{
+        type: String,
+        required: false
     }
 });
 

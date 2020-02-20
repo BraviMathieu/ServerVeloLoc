@@ -19,8 +19,9 @@ function initPassport(app) {
     });
 
     passport.use(new LocalStrategy(
-        {usernameField:"email",
-        passwordField:"mdp"
+        {
+            usernameField:"email",
+            passwordField:"mdp"
         },
         function(pseudo, mdp, done) {
             User.findOne({
@@ -39,15 +40,19 @@ function initPassport(app) {
             });
         }
     ));
-
-    app.get('/success', (req, res) => res.send({message:"Welcome "+req.query.pseudo+"!!"}));
-    app.get('/error', (req, res) => res.send({error:"error logging in"}));
+    app.get('/error', (req, res) => res.send({error:"Erreur de connexion"}));
 
     app.post('/login',
         passport.authenticate('local', { failureRedirect: '/error' }),
         function(req, res) {
-            res.redirect('/success?pseudo='+req.user.pseudo);
+            // SuccessRedirect
+            res.send({id:req.user.id});
         });
+
+    app.get('/logout', function(req, res){
+        req.logout();
+        res.redirect('/');
+    });
 }
 
 module.exports = initPassport;
