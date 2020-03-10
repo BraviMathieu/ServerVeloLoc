@@ -35,6 +35,8 @@ mongoose.connection.once('open', function() {
     passport(app);
     app.use("/user", usersRouter);
 
+    app.use("/", paiementRouter);
+
     app.use(function(req, res, next){
         next({
             status: 404,
@@ -67,5 +69,41 @@ mongoose.connection.once('open', function() {
     //Port
     app.listen(3000, function(){
         console.log("Le server écoute sur le port 3000.");
+    });
+});
+
+//gestion des paiements (avec stripe)
+const paiementRouter = require("./modules/paiement/paiement.router");
+// Set your secret key: remember to change this to your live secret key in production
+// See your keys here: https://dashboard.stripe.com/account/apikeys
+const stripe = require('stripe')('sk_test_F4ij4F5WEDbWeEEeKFqSxWDg0028C5S1FD');
+let paymentIntent;
+app.use("/secret", function(req,res,next) {
+    (async () => {
+        paymentIntent = await stripe.paymentIntents.create({
+            amount: 1000,
+            currency: 'eur',
+            payment_method_types: ['card'],
+            receipt_email: 'jenny.rosen@example.com',
+        });
+        console.log(paymentIntent);
+    })();
+    res.format({
+        'text/plain': function () {
+            res.send(paymentIntent.client_secret);
+        },
+
+        'text/html': function () {
+            res.send(paymentIntent.client_secret)
+        },
+
+        'application/json': function () {
+            res.send({message: paymentIntent.client_secret})
+        },
+
+        'default': function () {
+            // log the request and respond with 406
+            res.status(406).send('Not Acceptable')
+        }
     });
 });
