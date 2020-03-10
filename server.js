@@ -1,10 +1,16 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
+const paiementRouter = require("./modules/paiement/paiement.router");
+const stripe = require('stripe')('sk_test_F4ij4F5WEDbWeEEeKFqSxWDg0028C5S1FD');
+let paymentIntent;
+let client_secret_stripe;
 
 require('./modules/users/users.model');
 
-const passport =require("./passport");
+const passport = require("./passport");
 
 app.use(cors());
 
@@ -14,17 +20,49 @@ app.use(function(req, res, next){
 });
 
 //bodyParser
-const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.json());
 
+//gestion des paiements (avec stripe)
+app.use("/secret", function(req,res,next) {
+    (async () => {
+        paymentIntent = await stripe.paymentIntents.create({
+            amount: 1000,
+            currency: 'eur',
+            payment_method_types: ['card'],
+            receipt_email: 'jenny.rosen@example.com',
+        });
+        console.log(paymentIntent);
+        client_secret_stripe = paymentIntent.client_secret;
+    })();
+    res.format({
+        'text/plain': function () {
+            res.send(client_secret_stripe);
+        },
+
+        'text/html': function () {
+            res.send(client_secret_stripe)
+        },
+
+        'application/json': function () {
+            res.send({message: client_secret_stripe})
+        },
+
+        'default': function () {
+            // log the request and respond with 406
+            res.status(406).send('Not Acceptable')
+        }
+    });
+});
+
 //route et model
 const usersRouter = require("./modules/users/users.router");
+const veloRouter=require("./modules/velo/velo.router");
+const marqueRouter=require("./modules/marque/marque.router");
 require('./modules/users/users.model');
 
 //mongoose
-const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/server-veloloc', {
     useNewUrlParser: true,
     useUnifiedTopology:true
@@ -34,6 +72,9 @@ mongoose.connection.once('open', function() {
 
     passport(app);
     app.use("/user", usersRouter);
+    app.use("/velo",veloRouter);
+    app.use("/marque", marqueRouter);
+    app.use("/", paiementRouter);
 
     app.use(function(req, res, next){
         next({
