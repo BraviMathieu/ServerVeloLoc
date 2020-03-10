@@ -1,10 +1,10 @@
 {
   "name": "server_veloloc",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -15,17 +15,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.9.4",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
-  },
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BraviMathieu/ServerVeloLoc.git"
-  },
-  "bugs": {
-    "url": "https://github.com/BraviMathieu/ServerVeloLoc/issues"
-  },
-  "homepage": "https://github.com/BraviMathieu/ServerVeloLoc#readme",
-  "description": ""
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "stripe": "^8.29.0"
+  }
 }
