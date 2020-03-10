@@ -28,10 +28,10 @@ app.use(bodyParser.json());
 app.use("/secret", function(req,res,next) {
     (async () => {
         paymentIntent = await stripe.paymentIntents.create({
-            amount: 1000,
+            amount: req.body.prix*100,
             currency: 'eur',
             payment_method_types: ['card'],
-            receipt_email: 'jenny.rosen@example.com',
+            receipt_email: req.body.email,
         });
         console.log(paymentIntent);
         client_secret_stripe = paymentIntent.client_secret;

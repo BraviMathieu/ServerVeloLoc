@@ -54,7 +54,7 @@ module.exports = {
         const paiement = new Paiement({
             amount: req.body.amount,
             currency: req.body.currency,
-            payment_method_types: req.body.payment_method_types,
+            payment_method_types: ['card'],
             receipt_email: req.body.receipt_email
         });
 
