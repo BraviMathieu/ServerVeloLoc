@@ -25,7 +25,7 @@ require('./modules/users/users.model');
 
 //mongoose
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/server-veloc', {
+mongoose.connect('mongodb://localhost:27017/server-veloloc', {
     useNewUrlParser: true,
     useUnifiedTopology:true
 });
