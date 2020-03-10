@@ -21,11 +21,13 @@ app.use(bodyParser.json());
 
 //route et model
 const usersRouter = require("./modules/users/users.router");
+const veloRouter=require("./modules/velo/velo.router");
+const marqueRouter=require("./modules/marque/marque.router");
 require('./modules/users/users.model');
 
 //mongoose
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/server-veloc', {
+mongoose.connect('mongodb://localhost:27017/server-veloloc', {
     useNewUrlParser: true,
     useUnifiedTopology:true
 });
@@ -34,6 +36,8 @@ mongoose.connection.once('open', function() {
 
     passport(app);
     app.use("/user", usersRouter);
+    app.use("/velo",veloRouter);
+    app.use("/marque", marqueRouter);
 
     app.use(function(req, res, next){
         next({
