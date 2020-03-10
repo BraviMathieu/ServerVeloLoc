@@ -4,15 +4,13 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 const paiementRouter = require("./modules/paiement/paiement.router");
-// Set your secret key: remember to change this to your live secret key in production
-// See your keys here: https://dashboard.stripe.com/account/apikeys
 const stripe = require('stripe')('sk_test_F4ij4F5WEDbWeEEeKFqSxWDg0028C5S1FD');
 let paymentIntent;
 let client_secret_stripe;
 
 require('./modules/users/users.model');
 
-const passport =require("./passport");
+const passport = require("./passport");
 
 app.use(cors());
 
